@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from crawler import Crawler
 
 _MONZO_URL = "https://github.com/"

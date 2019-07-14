@@ -1,6 +1,6 @@
 # Async Web Crawler
 
-An async web crawler
+An async web crawler.
 
 # Run
 
@@ -12,8 +12,16 @@ pip install -r requirements.txt
 
 (or `pip-sync` if you have `pip-tools`)
 
-2. Then:
+2. Then `cd` to the root directory and:
 
 ```
-python main.py
+./run_crawler.py
+```
+
+# Test
+
+`cd` to the root directory and:
+
+```
+./run_tests.sh
 ```

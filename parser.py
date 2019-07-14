@@ -30,7 +30,7 @@ class Parser:
                 local_link = base_url + anchor
 
                 local_urls.add(local_link)
-            elif strip_base in anchor:
+            elif strip_base in anchor or anchor.startswith("/"):
 
                 anchor_split_result = urlsplit(anchor)
                 anchor_base = anchor_split_result.netloc

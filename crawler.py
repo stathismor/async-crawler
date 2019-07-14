@@ -5,8 +5,8 @@ from urllib.parse import urlsplit
 from parser import Parser
 
 
-_MAX_URLS = 100
-_MAX_WORKERS = 10
+_MAX_URLS = 500
+_MAX_WORKERS = 20
 
 
 class Crawler:
@@ -34,10 +34,9 @@ class Crawler:
             for url in urls:
                 if result_urls.qsize() >= _MAX_URLS:
                     pending_urls.task_done()
-                else:
-                    if result_urls._queue.count(url) == 0:
-                        pending_urls.put_nowait(url)
-                        result_urls.put_nowait(url)
+                elif result_urls._queue.count(url) == 0:
+                    pending_urls.put_nowait(url)
+                    result_urls.put_nowait(url)
 
             # Notify the pending_urls that the "work item" has been processed.
             pending_urls.task_done()
@@ -67,9 +66,10 @@ class Crawler:
         # Wait until all worker tasks are cancelled.
         await asyncio.gather(*tasks, return_exceptions=True)
 
-        result_urls = sorted(result_urls._queue)
-        for url in result_urls:
-            print(url)
+        return sorted(result_urls._queue)
 
     def crawl(self):
-        asyncio.run(self._crawl())
+        result_urls = asyncio.run(self._crawl())
+
+        for url in result_urls:
+            print(url)

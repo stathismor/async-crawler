@@ -23,43 +23,42 @@ class Crawler:
                 html = await response.text()
                 return html
 
-    async def worker(self, name, work_queue, result_queue):
+    async def worker(self, name, pending_urls, result_urls):
         while True:
-
-            url = await work_queue.get()
+            url = await pending_urls.get()
             html = await self.get_html(url)
 
             parser = Parser(html, url, self._subdomain)
             urls = parser.get_urls()
 
             for url in urls:
-                if result_queue.qsize() >= _MAX_URLS:
-                    work_queue.task_done()
+                if result_urls.qsize() >= _MAX_URLS:
+                    pending_urls.task_done()
                 else:
-                    if result_queue._queue.count(url) == 0:
-                        work_queue.put_nowait(url)
-                        result_queue.put_nowait(url)
+                    if result_urls._queue.count(url) == 0:
+                        pending_urls.put_nowait(url)
+                        result_urls.put_nowait(url)
 
-            # Notify the work_queue that the "work item" has been processed.
-            work_queue.task_done()
+            # Notify the pending_urls that the "work item" has been processed.
+            pending_urls.task_done()
 
     async def _crawl(self):
-        # Create a queue that we will use to store our "workload".
-        work_queue = asyncio.Queue()
-        work_queue.put_nowait(self._root_url)
+        # Create a queue that we will use to store our urls ready to be crawled.
+        pending_urls = asyncio.Queue()
+        pending_urls.put_nowait(self._root_url)
         # Create a queue that we will use to store the found urls.
-        result_queue = asyncio.Queue()
+        result_urls = asyncio.Queue()
 
         # Create worker tasks to process the queue concurrently.
         tasks = []
         for i in range(_MAX_WORKERS):
             task = asyncio.create_task(
-                self.worker(f"worker-{i}", work_queue, result_queue)
+                self.worker(f"worker-{i}", pending_urls, result_urls)
             )
             tasks.append(task)
 
         # Wait until the queue is fully processed.
-        await work_queue.join()
+        await pending_urls.join()
 
         # Cancel our worker tasks.
         for task in tasks:
@@ -68,7 +67,7 @@ class Crawler:
         # Wait until all worker tasks are cancelled.
         await asyncio.gather(*tasks, return_exceptions=True)
 
-        result_urls = sorted(result_queue._queue)
+        result_urls = sorted(result_urls._queue)
         for url in result_urls:
             print(url)
 

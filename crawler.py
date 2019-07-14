@@ -6,6 +6,7 @@ from parser import Parser
 
 
 _MAX_URLS = 100
+_MAX_WORKERS = 10
 
 
 class Crawler:
@@ -44,19 +45,21 @@ class Crawler:
 
     async def _crawl(self):
         # Create a queue that we will use to store our "workload".
-        queue = asyncio.Queue()
-        queue.put_nowait(self._root_url)
+        work_queue = asyncio.Queue()
+        work_queue.put_nowait(self._root_url)
         # Create a queue that we will use to store the found urls.
         result_queue = asyncio.Queue()
 
         # Create worker tasks to process the queue concurrently.
         tasks = []
-        for i in range(5):
-            task = asyncio.create_task(self.worker(f"worker-{i}", queue, result_queue))
+        for i in range(_MAX_WORKERS):
+            task = asyncio.create_task(
+                self.worker(f"worker-{i}", work_queue, result_queue)
+            )
             tasks.append(task)
 
         # Wait until the queue is fully processed.
-        await queue.join()
+        await work_queue.join()
 
         # Cancel our worker tasks.
         for task in tasks:
@@ -65,7 +68,7 @@ class Crawler:
         # Wait until all worker tasks are cancelled.
         await asyncio.gather(*tasks, return_exceptions=True)
 
-        result_urls = sorted([url for url in result_queue._queue])
+        result_urls = sorted(result_queue._queue)
         for url in result_urls:
             print(url)
 

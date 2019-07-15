@@ -1,14 +1,15 @@
 from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
+from typing import List
 
 
 class Parser:
-    def __init__(self, html, url, subdomain):
+    def __init__(self, html: str, url: str, subdomain: str):
         self._html = html
         self._url = url
         self._subdomain = subdomain
 
-    def get_urls(self):
+    def get_urls(self) -> List[str]:
         # Extract base url to resolve relative links
         local_urls = set()
         split_result = urlsplit(self._url)
@@ -42,5 +43,8 @@ class Parser:
             elif not anchor.startswith("http"):
                 local_link = path + anchor
                 local_urls.add(local_link)
+            else:
+                # Invalid anchor
+                pass
 
         return local_urls

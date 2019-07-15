@@ -27,12 +27,14 @@ class Parser:
         for link in soup.find_all("a"):
             anchor = link.attrs["href"] if "href" in link.attrs else ""
 
+            # An anchor like "/link_a/something"
             if anchor.startswith("/"):
                 local_link = base_url + anchor
 
                 local_urls.add(local_link)
-            elif strip_base in anchor or anchor.startswith("/"):
 
+            # An anchor like "https://subdomain/something"
+            elif strip_base in anchor:
                 anchor_split_result = urlsplit(anchor)
                 anchor_base = anchor_split_result.netloc
 
@@ -40,9 +42,11 @@ class Parser:
                 if anchor_base == self._subdomain:
                     local_urls.add(anchor)
 
+            # An anchor like "link_b/something"
             elif not anchor.startswith("http"):
                 local_link = path + anchor
                 local_urls.add(local_link)
+
             else:
                 # Invalid anchor
                 pass

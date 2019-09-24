@@ -19,7 +19,7 @@ pip install -r requirements.txt
 `cd` to the root directory and:
 
 ```
-./run_crawler.py https://monzo.com
+./run_crawler.py https://github.com
 ```
 
 ### Run tests
@@ -46,7 +46,7 @@ docker build -t crawler .
 ### Run crawler
 
 ```
-docker run crawler python run_crawler.py https://monzo.com
+docker run crawler python run_crawler.py https://github.com
 ```
 
 ### Run tests

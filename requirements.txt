@@ -4,31 +4,67 @@
 #
 #    pip-compile
 #
---extra-index-url https://packagecloud.io/github/git-lfs/pypi/simple
-
 aiohttp==3.5.4
-async-timeout==3.0.1      # via aiohttp
+    # via -r requirements.in
+async-timeout==3.0.1
+    # via aiohttp
 asyncio==3.4.3
-atomicwrites==1.3.0       # via pytest
-attrs==19.1.0             # via aiohttp, pytest
-beautifulsoup4==4.7.1     # via bs4
+    # via -r requirements.in
+atomicwrites==1.3.0
+    # via pytest
+attrs==19.1.0
+    # via
+    #   aiohttp
+    #   pytest
+beautifulsoup4==4.7.1
+    # via bs4
 bs4==0.0.1
-certifi==2019.6.16        # via requests
-chardet==3.0.4            # via aiohttp, requests
-idna==2.8                 # via requests, yarl
-importlib-metadata==0.18  # via pluggy, pytest
-more-itertools==7.1.0     # via pytest
-multidict==4.5.2          # via aiohttp, yarl
-packaging==19.0           # via pytest
-pluggy==0.12.0            # via pytest
-py==1.8.0                 # via pytest
-pyparsing==2.4.0          # via packaging
+    # via -r requirements.in
+certifi==2019.6.16
+    # via requests
+chardet==3.0.4
+    # via
+    #   aiohttp
+    #   requests
+idna==2.8
+    # via
+    #   requests
+    #   yarl
+importlib-metadata==0.18
+    # via
+    #   pluggy
+    #   pytest
+more-itertools==7.1.0
+    # via pytest
+multidict==4.5.2
+    # via
+    #   aiohttp
+    #   yarl
+packaging==19.0
+    # via pytest
+pluggy==0.12.0
+    # via pytest
+py==1.8.0
+    # via pytest
+pyparsing==2.4.0
+    # via packaging
 pytest-asyncio==0.10.0
+    # via -r requirements.in
 pytest==5.0.1
+    # via
+    #   -r requirements.in
+    #   pytest-asyncio
 requests==2.22.0
-six==1.12.0               # via packaging
-soupsieve==1.9.2          # via beautifulsoup4
-urllib3==1.25.3           # via requests
-wcwidth==0.1.7            # via pytest
-yarl==1.3.0               # via aiohttp
-zipp==0.5.2               # via importlib-metadata
+    # via -r requirements.in
+six==1.12.0
+    # via packaging
+soupsieve==1.9.2
+    # via beautifulsoup4
+urllib3==1.25.8
+    # via requests
+wcwidth==0.1.7
+    # via pytest
+yarl==1.3.0
+    # via aiohttp
+zipp==0.5.2
+    # via importlib-metadata
